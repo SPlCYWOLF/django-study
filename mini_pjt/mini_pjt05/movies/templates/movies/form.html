@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  {% if request.resolver_match.url_name == "create" %}
+    <h2>영화 작성</h2>
+    <form class="d-inline" action="{% url 'movies:create' %}" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button class="btn btn-primary">작성</button>
+    </form>
+    <a href="{% url 'movies:index' %}"><button class="btn btn-dark">취소</button></a>
+    
+    {% else %}
+      <h2>영화 수정</h2>
+      <form class="d-inline" action="{% url 'movies:update' movie.pk %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn btn-primary">작성</button>
+    </form>
+    <a href="{% url 'movies:detail' movie.pk %}"><button class="btn btn-dark">취소</button></a>
+  {% endif %}
+{% endblock  %}

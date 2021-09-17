@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>DETAIL</h2>
+  <h3>{{ review.pk }}번째 Review</h3>
+  <hr>
+  <p>제목: {{ review.title }}</p>
+  <p>영화제목: {{ review.movie_title }}</p>
+  <p>내용: {{ review.content }}</p>
+  <p>평점: {{ review.rank }}</p>
+  <a href="{% url 'community:update' review.pk %}">[update]</a>
+  <form action="{% url 'community:delete' review.pk %}" method="POST">
+    {% csrf_token %}
+    <button>[delete]</button>
+  </form>
+  
+{% endblock content %}
+

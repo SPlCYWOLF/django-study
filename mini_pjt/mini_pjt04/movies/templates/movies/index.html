@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>INDEX</h1>
+  <hr>
+  <a href=" {% url 'movies:new' %}">게시글 작성</a>
+  {% for movie in movies %}
+    <h2>제목: {{ movie.title }}</h2>
+    <p>내용: {{ movie.overview }}</p>
+    <a href=" {% url 'movies:detail' movie.pk %}">자세히</a>
+  {% endfor %}
+
+{% endblock %}

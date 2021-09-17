@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>{{ movie.title }}</h1>
+  <div class="row mb-4">
+    <div class="col-4">
+      <img style="width:400px"  src="{{ movie.image.url }}" alt="movie">
+    </div>
+    <div class="col-8">
+      <p >{{ movie.overview }}</p>
+    </div>
+  </div>
+
+  <div>
+    <a class="text-decoration-none" href="{% url 'movies:update' movie.pk %}">
+      <button class="btn btn-primary">수정</button>
+    </a>
+    <form class="d-inline" action="{% url 'movies:delete' movie.pk %}" method="POST">
+      {% csrf_token %}
+      <button class="btn btn-danger">삭제</button>
+    </form>
+    <a href="{% url 'movies:index' %}">
+      <button class="btn btn-dark">뒤로</button>
+    </a>
+  </div>
+{% endblock %}

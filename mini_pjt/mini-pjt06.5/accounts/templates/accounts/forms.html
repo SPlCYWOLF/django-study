@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+
+  {% if request.resolver_match.url_name == 'signup' %}
+    <h2>회원가입</h2>
+  {% elif request.resolver_match.url_name == 'login' %}
+    <h2>로그인</h2>
+  {% elif request.resolver_match.url_name == 'update' %}
+    <h2>회원정보 수정</h2>
+  {% else %}
+    <h2>비밀번호 변경</h2>
+  {% endif %}
+  <hr>
+  <form action="" method="POST">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <button class="btn btn-success">Submit</button>
+  </form>
+
+{% endblock content %}

@@ -1,13 +1,16 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
 from .forms import CustomUserChangeForm
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth import update_session_auth_hash
+from django.views.decorators.http import require_http_methods, require_POST, require_safe
 
 
 # Create your views here.
 
+@require_http_methods(['GET', 'POST'])
 def signup(request):
     if request.user.is_authenticated:
         return redirect('articles:index')
@@ -26,6 +29,7 @@ def signup(request):
     return render(request, 'accounts/forms.html', context)
 
 
+@require_http_methods(['GET', 'POST'])
 def login(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, request.POST)
@@ -40,10 +44,14 @@ def login(request):
     return render(request, 'accounts/forms.html', context)
 
 
+@require_safe
 def logout(request):
     auth_logout(request)
     return redirect('articles:index')
 
+
+@login_required
+@require_http_methods(['GET', 'POST'])
 def update(request):
     if request.method == 'POST':
         form = CustomUserChangeForm(data=request.POST, instance=request.user)
@@ -58,6 +66,8 @@ def update(request):
     return render(request, 'accounts/forms.html', context)
 
 
+@login_required
+@require_http_methods(['GET', 'POST'])
 def update_pw(request):
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
@@ -73,5 +83,9 @@ def update_pw(request):
     return render(request, 'accounts/forms.html', context)
 
 
+@login_required
+@require_safe
 def delete(request):
-    pass
+    request.user.delete()
+    auth_logout(request)
+    return redirect('articles:index')

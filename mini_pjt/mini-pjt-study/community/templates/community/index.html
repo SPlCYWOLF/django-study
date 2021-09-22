@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+
+  {% for review in reviews %}
+    <h2>{{ review.title }}{{ review.title|length }}</h2>
+    {{ review.content|truncatechars:15 }}
+    <a href="{% url 'community:detail' review.pk %}">자세히 보기</a>
+    <hr>
+  {% endfor %}
+
+{% endblock content %}

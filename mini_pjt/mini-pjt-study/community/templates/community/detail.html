@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+  <h2>{{ review.movie_title }}</h2>
+  <h5>{{ review.title }}</h5>
+  <p>{{ review.content }}</p>
+  <p>{{ review.rank }}</p>
+  <a href="{% url 'community:index' %}"><button>back</button></a>
+  <a href="{% url 'community:update' review.pk %}"><button>update</button></a>
+  
+  <form action="{% url 'community:delete' review.pk %}" method="POST">
+    {% csrf_token %}
+    <button>Delete</button>
+  </form>
+  
+{% endblock content %}

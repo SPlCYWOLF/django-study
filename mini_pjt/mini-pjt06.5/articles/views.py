@@ -2,9 +2,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Article
 from .forms import ArticleForm
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_http_methods, require_safe, require_POST
 # Create your views here.
 
-
+@require_safe
 def index(request):
     articles = Article.objects.order_by('-pk')
     paginator = Paginator(articles, 4)
@@ -17,6 +19,8 @@ def index(request):
     return render(request, 'articles/index.html', context)
 
 
+@login_required
+@require_http_methods(['GET', 'POST'])
 def create(request):
     if request.method == 'POST':
         form = ArticleForm(data=request.POST, files=request.FILES)
@@ -31,6 +35,7 @@ def create(request):
     return render(request, 'articles/create.html', context)
     
 
+@require_safe
 def detail(request, article_pk):
     article = get_object_or_404(Article, pk=article_pk)
     context = {
@@ -39,6 +44,8 @@ def detail(request, article_pk):
     return render(request, 'articles/detail.html', context)
 
 
+@login_required
+@require_http_methods(['GET', 'POST'])
 def update(request, article_pk):
     article = get_object_or_404(Article, pk=article_pk)
     if request.method == 'POST':
@@ -55,6 +62,8 @@ def update(request, article_pk):
     return render(request, 'articles/update.html', context)
 
 
+@login_required
+@require_POST
 def delete(request, article_pk):
     article = Article.objects.get(pk=article_pk)
     article.delete()

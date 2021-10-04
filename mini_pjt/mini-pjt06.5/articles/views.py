@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods, require_safe, require_POST
 # Create your views here.
 
+
 @require_safe
 def index(request):
     articles = Article.objects.order_by('-pk')

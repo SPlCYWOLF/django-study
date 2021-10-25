@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+  <h2> {{ target.username }}의 프로필 </h2>
+
+  {% comment %} 팔로우 숫자 {% endcomment %}
+  <h3>팔로워: {{ target.followings.all|length }}</h3>
+  <h3>팔로잉: {{ target.followers.all|length }}</h3>
+
+
+  {% comment %} 팔로우 버튼 {% endcomment %}
+  {% if request.user != target %}
+    <form action="{% url 'accounts:follow' target.username %}" method="POST">
+      {% csrf_token %}
+      {% if request.user in target.followings.all %}
+        <button class="btn btn-primary" data-toggle="toggle">Follow Cancel</button>
+      {% else %}
+        <button class="btn btn-primary" data-toggle="toggle">Follow</button>
+      {% endif %}
+    </form>
+  {% endif %}
+  <hr>
+
+  {% comment %} 뒤로가기 {% endcomment %}
+  <a href="{% url 'community:index' %}">[홈으로]</a>
+{% endblock content %}

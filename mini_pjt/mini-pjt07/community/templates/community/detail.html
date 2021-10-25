@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  {% comment %} 상세정보 {% endcomment %}
+  <p>작성자 : <a href="{% url 'accounts:profile' review.user %}">{{ review.user }}</a></p>
+  <p>글 번호 : {{ review.pk }}</p>
+  <p>글 제목 : {{ review.title }}</p>
+  <p>글 내용 : {{ review.content }}</p>
+  <p>좋아요 : {{ review.like_users.all|length }}</p>
+
+  {% comment %} 좋아요 {% endcomment %}
+  <div>
+    <form action="{% url 'community:like' review.pk %}" method="POST">
+      {% csrf_token %}
+      {% if user in review.like_users.all %}
+        {% comment %} 좋아요 표시 취소 {% endcomment %}
+        <button class="btn btn-link" style="color:red"><i class="fas fa-heart"></i></button>
+      {% else %}
+        {% comment %} 좋아요 표시 {% endcomment %}
+        <button class="btn btn-link" style="color:black"><i class="far fa-heart"></i></button>
+      {% endif %}
+    </form>
+  </div>
+  <hr>
+
+  {% comment %} 댓글 작성 {% endcomment %}
+  <hr>
+  <form action="{% url 'community:comment_create' review.pk %}" method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button>작성</button>
+  </form>
+
+  {% comment %} 댓글 {% endcomment %}
+  <ul>
+    {% for comment in comments %}
+      <li>
+        {{ comment.user }} - {{ comment.content }}
+      </li>
+    {% empty %}
+      <p>댓글이 없어요..</p>
+    {% endfor %}
+  </ul>
+
+  {% comment %} 뒤로가기 {% endcomment %}
+  <a href="{% url 'community:index' %}">[홈으로]</a>
+
+{% endblock content %}

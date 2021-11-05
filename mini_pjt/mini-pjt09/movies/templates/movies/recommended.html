@@ -1,0 +1,35 @@
+{% extends 'base.html' %} {% block content %}
+<h1>Recommend</h1>
+<hr/>
+{% for movie in movies %}
+{% endfor %}
+<div id="recommended-movie">
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+    const STORAGE_KEY = 'my-movie-list'
+    const movies = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []
+    const recommendedMovieList = document.querySelector("#recommended-movie")
+
+    if (movies.length !== 0) {
+        const selectedMovie = movies[0]
+        const API_URL = `https://api.themoviedb.org/3/movie/${selectedMovie}/recommendations?api_key=151722ecc2fd016e5276ec5178b529bc`
+        axios.get(API_URL).then((res) => {
+
+            res.data.results.forEach((movie) => {
+                const DOM_img = document.createElement("img");
+                DOM_img.src = `https://image.tmdb.org/t/p/original/${movie.poster_path}`
+                DOM_img.alt = movie.title
+                DOM_img.width = "100"
+                recommendedMovieList.appendChild(DOM_img);
+            })
+            
+        })
+    }else(
+        recommendedMovieList.innerHTML= `<p>Movie 목록에서 관심있는 영화를 목록에서 선택해주세요</p>`
+    )
+
+</script>
+{% endblock content %}

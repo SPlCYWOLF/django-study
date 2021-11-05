@@ -1,0 +1,49 @@
+{% extends 'base.html' %} {% block content %}
+<h1>movies</h1>
+<a href="{% url 'movies:recommended'%}" class="recommend">Recommend</a>
+<hr />
+{% for movie in movies %}
+<p>글 번호 : {{ movie.pk }}</p>
+<p>글 제목 : {{ movie.title }}</p>
+<p>글 내용 : {{ movie.overview|truncatechars:100 }}</p>
+<a id="{{ movie.tmdb_id }}" class="movie" href="{% url 'movies:detail' movie.pk %}">[DETAIL]</a>
+<hr />
+{% endfor %}
+<div class="d-flex justify-content-center">
+    <nav  aria-label="Page navigation example">
+        <ul class="pagination">
+            {% if movies.paginator.num_pages %} 
+            {% for i in "x"|rjust:movies.paginator.num_pages %}
+            <li class="page-item">
+            <a class="page-link" href="?page={{ forloop.counter }}"
+                >{{forloop.counter}}
+            </a>
+            </li>
+            {% endfor %} {% endif %}
+        </ul>
+        </nav>
+</div>
+
+<script>
+    const STORAGE_KEY = 'my-movie-list'
+
+    const setMovieStorage = (e) => {
+        
+        const movieId = e.target.id
+        console.log(movieId)
+        let movieStorage = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []
+        movieStorage.push(movieId)
+        movieStorage = new Set(movieStorage)
+        movieStorage = [...movieStorage]
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(movieStorage))
+        console.log(localStorage)
+
+    }
+
+    const movies = document.querySelectorAll('.movie')
+    movies.forEach(function (movie) {
+      movie.addEventListener('click', setMovieStorage)
+    })
+
+</script>
+{% endblock content %}
